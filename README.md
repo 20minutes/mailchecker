@@ -8,7 +8,7 @@ Node.js-only branch of [MailChecker](https://github.com/FGRibreau/mailchecker). 
 yarn add 'mailchecker@git+https://github.com/20minutes/mailchecker.git#more-emails'
 ```
 
-No npm release is required.
+No npm release is required. The repository uses its own Yarn cache to prevent Git dependency preparation from racing with the consuming project's downloads.
 
 ## Usage
 
