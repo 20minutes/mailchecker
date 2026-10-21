@@ -52,6 +52,17 @@ suite('Generator', function () {
     });
   });
 
+  suite('CLI', function () {
+    test('should fail the build when compilation fails', function () {
+      var result = require('child_process').spawnSync(process.execPath, ['-e',
+        "require('./lib/generator').compile = function (done) { done(new Error('Compilation failed')); }; require('./gen');"
+      ], { cwd: require('path').resolve(__dirname, '..'), encoding: 'utf8' });
+
+      t.strictEqual(result.status, 1);
+      t.ok(result.stderr.includes('Compilation failed'));
+    });
+  });
+
   suite('.compile', function () {
     test('should compile all templates', function (tdone) {
       // Generator.on('*', function (template) {

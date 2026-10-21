@@ -33,7 +33,7 @@ npm ci
 npm test
 ```
 
-Commit both `list.txt` and `platform/node/index.js`. The generated module is tracked so Git dependencies work without a build or development dependencies.
+`npm ci` installs the Husky pre-commit hook (Node.js 18+ required for development). Before each commit, it runs the build and stages the full normalized `list.txt` and generated `platform/node/index.js`, including any unstaged changes to these files. The generated module is tracked so Git dependencies work without a build or development dependencies.
 
 `npm run build` normalizes `list.txt` and regenerates the module from `platform/node/index.tmpl.js`. Docker and other language toolchains are not needed.
 

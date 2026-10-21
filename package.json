@@ -8,6 +8,7 @@
     "types.d.ts"
   ],
   "scripts": {
+    "prepare": "husky || true",
     "build": "node lib/clean.js && node gen.js",
     "test": "npm run build && npm run test:node",
     "test:node": "mocha --timeout 10000 -r should -R spec -u tdd",
@@ -130,6 +131,7 @@
     "auto-changelog": "^2.6.0",
     "eventemitter2": "^6.0.0",
     "glob": "^7.0.3",
+    "husky": "^9.1.7",
     "lodash": "^4.17.15",
     "mocha": "^7.0.0",
     "mu2": "~0.5.20",

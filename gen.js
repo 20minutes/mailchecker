@@ -14,6 +14,11 @@ gen.on('*', function (v) {
   console.info('[', this.event, ']\t', v);
 });
 
-gen.compile(function () {
+gen.compile(function (err) {
+  if (err) {
+    console.error(err);
+    process.exitCode = 1;
+    return;
+  }
   console.log('Done.');
 });

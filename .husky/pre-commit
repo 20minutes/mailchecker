@@ -1,0 +1,2 @@
+npm run build
+git add -- list.txt platform/node/index.js
