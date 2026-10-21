@@ -23,19 +23,21 @@ MailChecker.addCustomDomains(['disposable.example']);
 MailChecker.blacklist(); // Set of blocked domains
 ```
 
-CommonJS and TypeScript declarations are included. The runtime has no external dependencies.
+Requires Node.js 24 or newer. CommonJS and TypeScript declarations are included. The runtime has no external dependencies.
 
 ## Update the domain list
 
 ```sh
-npm ci
+yarn install --frozen-lockfile
 # Edit list.txt, then regenerate the Node.js module and run the tests:
-npm test
+yarn test
 ```
 
-`npm ci` installs the Husky pre-commit hook (Node.js 18+ required for development). Before each commit, it runs the build and stages the full normalized `list.txt` and generated `platform/node/index.js`, including any unstaged changes to these files. The generated module is tracked so Git dependencies work without a build or development dependencies.
+`yarn install` installs the Husky pre-commit hook. Before each commit, it runs the build and stages the full normalized `list.txt` and generated `platform/node/index.js`, including any unstaged changes to these files. The generated module is tracked so Git dependencies work without a build or development dependencies.
 
-`npm run build` normalizes `list.txt` and regenerates the module from `platform/node/index.tmpl.js`. Docker and other language toolchains are not needed.
+`yarn build` normalizes `list.txt` and regenerates the module from `platform/node/index.tmpl.js`. Docker and other language toolchains are not needed.
+
+The build uses Node.js built-ins and `psl`; tests use `node:test` and `node:assert/strict`.
 
 The package's `files` allowlist includes only the generated Node.js module and TypeScript declarations, alongside npm's standard metadata, README and license.
 

@@ -1,81 +1,81 @@
-const t = require('node:assert')
-const _ = require('lodash')
-const Generator = require('../lib/generator')
+const assert = require('node:assert/strict')
+const { spawnSync } = require('node:child_process')
+const fs = require('node:fs')
+const path = require('node:path')
+const { describe, it } = require('node:test')
+const { compile } = require('../lib/generator')
+const loader = require('../lib/loader')
 
-suite('Generator', () => {
-  setup(() => {
-    // ...
+const root = path.resolve(__dirname, '..')
+const outputPath = path.join(root, 'platform/node/index.js')
+
+describe('Generator', () => {
+  it('reproduces the generated Node.js module byte for byte', () => {
+    const expected = fs.readFileSync(outputPath)
+
+    compile()
+
+    assert.deepEqual(fs.readFileSync(outputPath), expected)
   })
 
-  suite('.getTemplatesSync', () => {
-    test('should only return the Node.js template', () => {
-      Generator.getTemplatesSync()
-        .map((template) => template.fullOutputPath)
-        .should.eql([require('node:path').resolve(__dirname, '../platform/node/index.js')])
-    })
+  it('renders lowercase domains without interpreting replacement patterns', (t) => {
+    t.mock.method(loader, 'getList', () => ['YOPMAIL.COM', '$&.EXAMPLE'])
+    const write = t.mock.method(fs, 'writeFileSync', () => {})
 
-    test('should return an array', () => {
-      t.ok(_.isArray(Generator.getTemplatesSync()))
-    })
+    compile()
 
-    test('should return an array of object', () => {
-      Generator.getTemplatesSync().forEach((v) => {
-        t.ok(_.isPlainObject(v))
-      })
-    })
+    assert.equal(write.mock.callCount(), 1)
+    const [file, output] = write.mock.calls[0].arguments
+    assert.equal(file, outputPath)
+    assert.ok(output.includes('new Set(["yopmail.com","$&.example"])'))
+    assert.ok(!output.includes('{{&'))
   })
 
-  suite('.parsePath', () => {
-    test('should parse specified path', () => {
-      const fullpath = '/a/b/c/mailchecker/platform/node/index.tmpl.js'
-      const r = Generator.parsePath(fullpath)
-      r.should.eql({
-        fullpath: fullpath,
-        fullOutputPath: '/a/b/c/mailchecker/platform/node/index.js',
-        dir: '/a/b/c/mailchecker/platform/node',
-        template: 'index.tmpl.js',
-        output: 'index.js',
-      })
+  it('propagates template read errors', (t) => {
+    const error = new Error('Template unavailable')
+    t.mock.method(loader, 'getList', () => ['example.com'])
+    t.mock.method(fs, 'readFileSync', () => {
+      throw error
     })
+
+    assert.throws(compile, error)
   })
 
-  suite('.getDomainList', () => {
-    test('should return a non-empty list of lowercase strings', () => {
-      const r = Generator.getDomainList()
-
-      r.length.should.be.above(0)
-
-      r.forEach((domain) => {
-        domain.should.eql(domain.toLowerCase())
-      })
+  it('propagates output write errors', (t) => {
+    const error = new Error('Output unavailable')
+    t.mock.method(fs, 'writeFileSync', () => {
+      throw error
     })
+
+    assert.throws(compile, error)
   })
 
-  suite('CLI', () => {
-    test('should fail the build when compilation fails', () => {
-      const result = require('node:child_process').spawnSync(
+  describe('CLI', () => {
+    it('reports success when compilation succeeds', () => {
+      const result = spawnSync(
+        process.execPath,
+        ['-e', "require('./lib/generator').compile = () => {}; require('./gen');"],
+        { cwd: root, encoding: 'utf8' }
+      )
+
+      assert.equal(result.status, 0)
+      assert.match(result.stdout, /Done\./)
+      assert.equal(result.stderr, '')
+    })
+
+    it('fails the build when compilation fails', () => {
+      const result = spawnSync(
         process.execPath,
         [
           '-e',
-          "require('./lib/generator').compile = function (done) { done(new Error('Compilation failed')); }; require('./gen');",
+          "require('./lib/generator').compile = () => { throw new Error('Compilation failed'); }; require('./gen');",
         ],
-        { cwd: require('node:path').resolve(__dirname, '..'), encoding: 'utf8' }
+        { cwd: root, encoding: 'utf8' }
       )
 
-      t.strictEqual(result.status, 1)
-      t.ok(result.stderr.includes('Compilation failed'))
-    })
-  })
-
-  suite('.compile', () => {
-    test('should compile all templates', (tdone) => {
-      // Generator.on('*', function (template) {
-      //   console.info(this.event, template.template);
-      // });
-      Generator.compile((err) => {
-        t.deepEqual(err, null)
-        tdone()
-      })
+      assert.equal(result.status, 1)
+      assert.match(result.stderr, /Compilation failed/)
+      assert.doesNotMatch(result.stdout, /Done\./)
     })
   })
 })
