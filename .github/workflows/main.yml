@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
   push:
     branches: [ master, more-emails ]
@@ -15,20 +12,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 22.x
-          cache: npm
-          cache-dependency-path: package-lock.json
+          node-version-file: '.nvmrc'
+          cache: yarn
 
       - name: Install
-        run: npm ci
+        run: yarn install --no-progress --frozen-lockfile
       
+      - name: Lint
+        run: yarn lint:ci
+
       - name: Test
-        run: npm test
+        run: yarn test
 
       - name: Check generated Node.js module is committed
         run: git diff --exit-code -- platform/node/index.js

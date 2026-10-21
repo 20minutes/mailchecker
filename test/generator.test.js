@@ -1,77 +1,81 @@
-var t = require('assert');
-var _ = require('lodash');
-var Generator = require('../lib/generator');
+const t = require('node:assert')
+const _ = require('lodash')
+const Generator = require('../lib/generator')
 
-suite('Generator', function () {
-  setup(function () {
+suite('Generator', () => {
+  setup(() => {
     // ...
-  });
+  })
 
-  suite('.getTemplatesSync', function () {
-    test('should only return the Node.js template', function () {
-      Generator.getTemplatesSync().map(function (template) {
-        return template.fullOutputPath;
-      }).should.eql([require('path').resolve(__dirname, '../platform/node/index.js')]);
-    });
+  suite('.getTemplatesSync', () => {
+    test('should only return the Node.js template', () => {
+      Generator.getTemplatesSync()
+        .map((template) => template.fullOutputPath)
+        .should.eql([require('node:path').resolve(__dirname, '../platform/node/index.js')])
+    })
 
-    test('should return an array', function () {
-      t.ok(_.isArray(Generator.getTemplatesSync()));
-    });
+    test('should return an array', () => {
+      t.ok(_.isArray(Generator.getTemplatesSync()))
+    })
 
-    test('should return an array of object', function () {
-      Generator.getTemplatesSync().forEach(function (v) {
-        t.ok(_.isPlainObject(v));
-      });
-    });
-  });
+    test('should return an array of object', () => {
+      Generator.getTemplatesSync().forEach((v) => {
+        t.ok(_.isPlainObject(v))
+      })
+    })
+  })
 
-  suite('.parsePath', function () {
-    test('should parse specified path', function () {
-      var fullpath = "/a/b/c/mailchecker/platform/node/index.tmpl.js";
-      var r = Generator.parsePath(fullpath);
+  suite('.parsePath', () => {
+    test('should parse specified path', () => {
+      const fullpath = '/a/b/c/mailchecker/platform/node/index.tmpl.js'
+      const r = Generator.parsePath(fullpath)
       r.should.eql({
         fullpath: fullpath,
-        fullOutputPath: "/a/b/c/mailchecker/platform/node/index.js",
-        dir: "/a/b/c/mailchecker/platform/node",
-        template: "index.tmpl.js",
-        output: "index.js"
-      });
+        fullOutputPath: '/a/b/c/mailchecker/platform/node/index.js',
+        dir: '/a/b/c/mailchecker/platform/node',
+        template: 'index.tmpl.js',
+        output: 'index.js',
+      })
+    })
+  })
 
-    });
-  });
+  suite('.getDomainList', () => {
+    test('should return a non-empty list of lowercase strings', () => {
+      const r = Generator.getDomainList()
 
-  suite('.getDomainList', function () {
-    test('should return a non-empty list of lowercase strings', function () {
-      var r = Generator.getDomainList();
+      r.length.should.be.above(0)
 
-      r.length.should.be.above(0);
+      r.forEach((domain) => {
+        domain.should.eql(domain.toLowerCase())
+      })
+    })
+  })
 
-      r.map(function (domain) {
-        domain.should.eql(domain.toLowerCase());
-      });
-    });
-  });
+  suite('CLI', () => {
+    test('should fail the build when compilation fails', () => {
+      const result = require('node:child_process').spawnSync(
+        process.execPath,
+        [
+          '-e',
+          "require('./lib/generator').compile = function (done) { done(new Error('Compilation failed')); }; require('./gen');",
+        ],
+        { cwd: require('node:path').resolve(__dirname, '..'), encoding: 'utf8' }
+      )
 
-  suite('CLI', function () {
-    test('should fail the build when compilation fails', function () {
-      var result = require('child_process').spawnSync(process.execPath, ['-e',
-        "require('./lib/generator').compile = function (done) { done(new Error('Compilation failed')); }; require('./gen');"
-      ], { cwd: require('path').resolve(__dirname, '..'), encoding: 'utf8' });
+      t.strictEqual(result.status, 1)
+      t.ok(result.stderr.includes('Compilation failed'))
+    })
+  })
 
-      t.strictEqual(result.status, 1);
-      t.ok(result.stderr.includes('Compilation failed'));
-    });
-  });
-
-  suite('.compile', function () {
-    test('should compile all templates', function (tdone) {
+  suite('.compile', () => {
+    test('should compile all templates', (tdone) => {
       // Generator.on('*', function (template) {
       //   console.info(this.event, template.template);
       // });
-      Generator.compile(function (err) {
-        t.deepEqual(err, null);
-        tdone();
-      });
-    });
-  });
-});
+      Generator.compile((err) => {
+        t.deepEqual(err, null)
+        tdone()
+      })
+    })
+  })
+})

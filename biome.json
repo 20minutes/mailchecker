@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "@20minutes/eslint-config/biome"
+  ],
+  "files": {
+    "includes": [
+      "**",
+      "!!platform/node/index.js",
+      "!!platform/node/index.tmpl.js"
+    ]
+  }
+}

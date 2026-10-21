@@ -1,30 +1,29 @@
-var _ = require('lodash');
-var loader = null;
-var t = require('assert');
+const _ = require('lodash')
+let loader = null
+const t = require('node:assert')
 
-suite('Loader', function () {
-  setup(function () {
-    loader = require('../lib/loader');
-  });
+suite('Loader', () => {
+  setup(() => {
+    loader = require('../lib/loader')
+  })
 
-  suite('#getDomains', function () {
-    test('should load domains from plain text file', function () {
-      domains = loader.getDomains('test/list.test.txt');
-      expected = ['one.com', 'two.org', 'three.net'];
-      domains.toString().should.equal(expected.toString());
-    });
-  });
+  suite('#getDomains', () => {
+    test('should load domains from plain text file', () => {
+      const domains = loader.getDomains('test/list.test.txt')
+      const expected = ['one.com', 'two.org', 'three.net']
+      domains.toString().should.equal(expected.toString())
+    })
+  })
 
-  suite('#getList', function () {
-    test('should return an array', function () {
-      t.ok(_.isArray(loader.getList()));
-    });
+  suite('#getList', () => {
+    test('should return an array', () => {
+      t.ok(_.isArray(loader.getList()))
+    })
 
-    test('should return an array of string', function () {
-      loader.getList().forEach(function (v, i) {
-        t.ok(_.isString(v), 'index ' + i);
-      });
-    });
-  });
-
-});
+    test('should return an array of string', () => {
+      loader.getList().forEach((v, i) => {
+        t.ok(_.isString(v), `index ${i}`)
+      })
+    })
+  })
+})

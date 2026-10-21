@@ -12,121 +12,26 @@
     "build": "node lib/clean.js && node gen.js",
     "test": "npm run build && npm run test:node",
     "test:node": "mocha --timeout 10000 -r should -R spec -u tdd",
-    "watch": "mocha -r should -R spec -u tdd -w",
-    "updtr": "updtr",
-    "changelog": "auto-changelog --template .changelog.hbs --commit-limit false --hide-credit --output CHANGELOG.md"
+    "lint": "biome check --max-diagnostics=none",
+    "lint:fix": "biome check --write --unsafe --max-diagnostics=none",
+    "lint:staged": "biome check --error-on-warnings --no-errors-on-unmatched --staged --max-diagnostics=none",
+    "lint:ci": "biome ci --max-diagnostics=none --error-on-warnings"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/FGRibreau/mailchecker.git"
+    "url": "git://github.com/20minutes/mailchecker.git"
   },
-  "keywords": [
-    "email",
-    "domains",
-    "disposable"
-  ],
   "engines": {
-    "node": ">=0.10"
+    "npm": "please-use-yarn-instead",
+    "yarn": ">= 1.22.22",
+    "node": ">= 24"
   },
   "browsers": false,
-  "maintainers": [
-    "Francois-Guillaume Ribreau <github@fgribreau.com> (http://bit.ly/2c7uFJq)"
-  ],
-  "sponsors": [],
-  "contributors": [
-    "Owen Stephens <owen@owenstephens.co.uk> (http://www.owenstephens.co.uk)",
-    "Jacob Burenstam Linder (http://jacobburenstam.com)",
-    "Herman Slatman (http://hermanslatman.nl)",
-    "trisix <d.trisix@gmail.com> (https://github.com/trisix)",
-    "Greenkeeper (http://greenkeeper.io/)",
-    "Dustin Clark <dusty@isperldead.net> (http://wusty.io)",
-    "Anton Zhiyanov <m@antonz.ru> (http://antonz.ru/)",
-    "Bruel Nicolas (https://github.com/NBruel)",
-    "Robin (https://github.com/R-J)",
-    "Spir (https://github.com/Spir)",
-    "Vincent Giersch <github@vincent.sh> (http://flat.io)",
-    "Adrian Carolli (http://adriancarolli.surge.sh/)",
-    "Dave Powers (http://djpowers.github.io)",
-    "Frank Phillips (https://github.com/frankydp)",
-    "LuckyDino (https://github.com/LuckyDino)",
-    "ven (https://github.com/vendethiel)",
-    "Romain Gay <v@42.am> (http://www.linkedin.com/in/romaingay)",
-    "Sebastian Cohnen (http://stormforger.com)",
-    "Dalai (https://github.com/dav1a1223)",
-    "quaswex (https://github.com/quaswex)",
-    "sxyuan (https://github.com/sxyuan)",
-    "Francois-Guillaume Ribreau <github@fgribreau.com> (http://bit.ly/2c7uFJq)",
-    "Dusty <hey@dusty.wtf> (http://dusty.wtf)",
-    "larsvegas <larsvegas+github@synpro.io> (http://synpro.io)",
-    "Zeeshan Muhammad (zeeshanmuhammad.com)",
-    "kkleejoe (https://github.com/kkleejoe)",
-    "Luiz Freneda (http://www.freneda.com.br)",
-    "thorinisme (https://github.com/thorinisme)",
-    "Liudas Šumskas (https://github.com/Outsidaz)",
-    "Alexander (https://github.com/Wapweb)",
-    "Alex Dom￸aki￸dis (http://gitlab.com/datio/)",
-    "Carlos Rios (http://zanaca.com)",
-    "Jacek Bzdak (https://github.com/jbzdak)",
-    "D (https://github.com/dustywusty)",
-    "Jonas Haag (http://cashlink.io)",
-    "￸A￸l￸e￸x D￸o￸m￸a￸k￸i￸d￸i￸s (http://alex.domakidis.com/)",
-    "Dan McGregor (https://github.com/mcgregordan)",
-    "Thiago Rodrigues (xthiago) (http://xthiago.com/)",
-    "Dilli Labs LLC (http://www.dillilabs.com)",
-    "Kieron Lawson (http://spokephone.com)",
-    "Kslr (http://kslr.org)",
-    "Lint (http://C0derLint.github.io)",
-    "chadliu23 (https://github.com/chadliu23)",
-    "milkyklim (http://t.me/milkyklim)",
-    "Sharat MR (https://github.com/cosmosgenius)",
-    "Nicolas Perraud (https://github.com/nicolasPerraud)",
-    "tbdmainrepo (https://github.com/tbdmainrepo)",
-    "Kslr (https://github.com/kslr)",
-    "Fabio Caccamo (http://fabiocaccamo.com/)",
-    "cyril souillard (https://github.com/nayluge)",
-    "Grégoire Pineau (http://blog.lyrixx.info)",
-    "Bruno Bossola (meterian.io)",
-    "florian-crtl (https://github.com/florian-crtl)",
-    "mikeyzm (http://aneveningcalm.com)",
-    "Grégoire Pineau (http://lyrixx.info/)",
-    "alonga (https://github.com/alongat)",
-    "Vitalii Tverdokhlib (nitralabs.com)",
-    "Francis Chuang (https://github.com/F21)",
-    "mikeyzm (http://mikeyzm.cn)",
-    "Pascal Vizeli (http://www.syshack.ch)",
-    "Caroline (https://github.com/carolineBda)",
-    "Daniel Mihai (http://danielmihai.ro)",
-    "HWVS (https://github.com/hwvs)",
-    "seb's (https://github.com/sydneyitguy)",
-    "Chigusa0w0 (http://bug.is)",
-    "Maki (http://cutelab.space)"
-  ],
-  "badges": {
-    "list": [
-      "travisci",
-      "npmversion",
-      "npmdownloads",
-      "daviddm",
-      "daviddmdev",
-      "---",
-      "patreon",
-      "gratipay",
-      "flattr",
-      "paypal",
-      "bitcoin"
-    ],
-    "config": {
-      "patreonUsername": "fgribreau",
-      "gratipayUsername": "fgribreau",
-      "flattrUsername": "fgribreau",
-      "paypalURL": "https://fgribreau.me/paypal",
-      "bitcoinURL": "https://www.coinbase.com/fgribreau"
-    }
-  },
   "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@20minutes/eslint-config": "^3.0.9",
     "async": "^3.1.0",
     "auto-changelog": "^2.6.0",
     "eventemitter2": "^6.0.0",
@@ -136,11 +41,7 @@
     "mocha": "^7.0.0",
     "mu2": "~0.5.20",
     "psl": "^1.7.0",
-    "should": "^13.2.3",
-    "updtr": "^3.1.0"
+    "should": "^13.2.3"
   },
-  "typings": "./types.d.ts",
-  "bugs": {
-    "url": "https://github.com/FGRibreau/mailchecker/issues"
-  }
+  "typings": "./types.d.ts"
 }

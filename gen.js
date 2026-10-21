@@ -1,24 +1,23 @@
 #!/usr/bin/env node
 
-'use strict';
-console.log("Compiling libraries from templates...");
-var gen = require('./lib/generator');
-var _ = require('lodash');
+console.info('Compiling libraries from templates...')
+const gen = require('./lib/generator')
+const _ = require('lodash')
 
 gen.on('*', function (v) {
   if (_.isArray(v)) {
-    v = v.length;
+    v = v.length
   } else {
-    v = v.template;
+    v = v.template
   }
-  console.info('[', this.event, ']\t', v);
-});
+  console.info('[', this.event, ']\t', v)
+})
 
-gen.compile(function (err) {
+gen.compile((err) => {
   if (err) {
-    console.error(err);
-    process.exitCode = 1;
-    return;
+    console.error(err)
+    process.exitCode = 1
+    return
   }
-  console.log('Done.');
-});
+  console.info('Done.')
+})
