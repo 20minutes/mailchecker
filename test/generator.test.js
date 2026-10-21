@@ -8,6 +8,12 @@ suite('Generator', function () {
   });
 
   suite('.getTemplatesSync', function () {
+    test('should only return the Node.js template', function () {
+      Generator.getTemplatesSync().map(function (template) {
+        return template.fullOutputPath;
+      }).should.eql([require('path').resolve(__dirname, '../platform/node/index.js')]);
+    });
+
     test('should return an array', function () {
       t.ok(_.isArray(Generator.getTemplatesSync()));
     });
@@ -21,14 +27,14 @@ suite('Generator', function () {
 
   suite('.parsePath', function () {
     test('should parse specified path', function () {
-      var fullpath = "/a/b/c/mailchecker/platform/php/mailchecker.tmpl.php";
+      var fullpath = "/a/b/c/mailchecker/platform/node/index.tmpl.js";
       var r = Generator.parsePath(fullpath);
       r.should.eql({
         fullpath: fullpath,
-        fullOutputPath: "/a/b/c/mailchecker/platform/php/mailchecker.php",
-        dir: "/a/b/c/mailchecker/platform/php",
-        template: "mailchecker.tmpl.php",
-        output: "mailchecker.php"
+        fullOutputPath: "/a/b/c/mailchecker/platform/node/index.js",
+        dir: "/a/b/c/mailchecker/platform/node",
+        template: "index.tmpl.js",
+        output: "index.js"
       });
 
     });

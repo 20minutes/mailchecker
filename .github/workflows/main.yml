@@ -5,9 +5,9 @@ name: CI
 # Controls when the workflow will run
 on:
   push:
-    branches: [ master ]
+    branches: [ master, more-emails ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, more-emails ]
   workflow_dispatch:
 
 jobs:
@@ -17,11 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: setup-docker
-        uses: docker/setup-docker-action@v4
-        with:
-          channel: stable
-          
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
@@ -34,3 +29,6 @@ jobs:
       
       - name: Test
         run: npm test
+
+      - name: Check generated Node.js module is committed
+        run: git diff --exit-code -- platform/node/index.js

@@ -2,29 +2,4 @@
 node_modules
 npm-*.log*
 compare.js
-
-
-vendor/
 .env
-
-# python
-*.pyc
-platform/python/dist
-platform/python/mailchecker.egg-info
-
-
-# ruby
-*.gem
-Gemfile.lock
-
-# rust
-rust.iml
-platform/rust/target/
-platform/rust/cargo/
-
-
-# clojure
-target
-pom.xml
-mailchecker.iml
-idea/

@@ -1,20 +1,12 @@
-# Contributing to Mailchecker <!-- omit in toc -->
+# Contributing to MailChecker
 
-## Getting started<!-- omit in toc -->
+This branch supports Node.js only.
 
-Before you begin:
-- Mailchecker is powered by Node.js. Check to see if you're on the right [version of node in `engines.node`](package.json).
-- Docker is used for setting up and running tests for various platforms. [Install Docker](https://www.docker.com/get-started) and make sure you have `docker` command in `PATH`.
+## Add disposable email domains
 
+1. Install development dependencies with `npm ci`.
+2. Add domains to `list.txt`.
+3. Run `npm test` to normalize the list, regenerate the Node.js module and run the tests.
+4. Commit both `list.txt` and `platform/node/index.js`.
 
-### How to add new domains to the disallow list?
-
-Before you make your changes, check to see if an [pull-request](https://github.com/FGRibreau/mailchecker/pulls) exist already for the changes you want to make.
-
-To add new domains to Mailchecker disallow list [open an PR](https://github.com/FGRibreau/mailchecker/issues/new/choose) that:
-- **only (only)** change and **commit** the [list.txt](list.txt) file
-- test locally everything with `npm test`
-- only commit [`list.txt`](list.txt) file change, every libraries will be automatically updated once the PR is merged
-
-## Reviewing
-I review every single PR. The purpose of reviews is to ensure every domain is used for disposable emails.
+The generated module must stay committed: Nova installs this branch directly from Git without a build step. No npm release is needed.
