@@ -5,7 +5,7 @@ Node.js-only branch of [MailChecker](https://github.com/FGRibreau/mailchecker). 
 ## Installation
 
 ```sh
-npm install 'git+ssh://git@github.com/20minutes/mailchecker.git#more-emails'
+yarn add 'mailchecker@git+https://github.com/20minutes/mailchecker.git#more-emails'
 ```
 
 No npm release is required.
